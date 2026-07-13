@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Fechas Personales</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/cards.css">
+    <link rel="stylesheet" href="css/accordion.css">
+    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/dark.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">📅 CronosFechas</div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Buscar por título, tag, notas o grupo...">
+        </div>
+        <div class="actions-container">
+            <select id="sortSelect">
+                <option value="reciente">Más reciente</option>
+                <option value="antigua">Más antigua</option>
+                <option value="alfabetico">Alfabético</option>
+                <option value="favoritos">Favoritos primero</option>
+                <option value="transcurrido">Tiempo transcurrido</option>
+            </select>
+            <button id="viewToggle" class="btn-icon" title="Cambiar vista (Tarjetas / Lista)">📋</button>
+            <button id="themeToggle" class="btn-icon" title="Cambiar tema">🌓</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="dashboard-grid">
+            <div class="card panel-stats">
+                <h3>Estadísticas Globales</h3>
+                <div id="statsContainer" class="stats-grid"></div>
+            </div>
+            <div class="card panel-aniversarios">
+                <h3>Próximos Aniversarios</h3>
+                <div id="aniversariosContainer" class="aniversarios-list"></div>
+            </div>
+        </section>
+
+        <section class="main-layout">
+            <div class="grupos-section">
+                <h2>Grupos y Eventos</h2>
+                <div id="accordionContainer" class="accordion"></div>
+            </div>
+
+            <div class="views-section">
+                <div class="tabs">
+                    <button class="tab-btn active" data-target="timelineView">Línea Temporal</button>
+                    <button class="tab-btn" data-target="calendarView">Calendario Mensual</button>
+                </div>
+
+                <div id="timelineView" class="tab-content active">
+                    <div class="timeline-filter-container" style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                        <label for="timelineSort" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Orden cronológico:</label>
+                        <select id="timelineSort" style="padding: 4px 10px; font-size: 0.85rem; border-radius: var(--radius); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main);">
+                            <option value="reciente">Reciente ➔ Antiguo (Descendente)</option>
+                            <option value="antiguo">Antiguo ➔ Reciente (Ascendente)</option>
+                        </select>
+                    </div>
+                    
+                    <div id="timelineContainer" class="timeline"></div>
+                </div>
+
+                <div id="calendarView" class="tab-content">
+                    <div class="calendar-controls">
+                        <button id="prevMonth">◀</button>
+                        <span id="calendarTitle"></span>
+                        <button id="nextMonth">▶</button>
+                    </div>
+                    <div id="calendarGrid" class="calendar-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tools-panel card">
+            <h3>Gestión de Datos</h3>
+            <div class="tools-buttons">
+                <button id="btnExportJSON" class="btn">Exportar JSON</button>
+                <button id="btnExportCSV" class="btn">Exportar CSV</button>
+                <button id="btnPrint" class="btn">Imprimir Reporte</button>
+                <label for="importFile" class="btn btn-label">Importar JSON</label>
+                <input type="file" id="importFile" accept=".json" style="display:none;">
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

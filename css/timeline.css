@@ -1,0 +1,23 @@
+.timeline {
+    position: relative;
+    padding-left: 30px;
+    border-left: 3px solid var(--border-color);
+    margin-top: 20px;
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 25px;
+}
+.timeline-dot {
+    position: absolute;
+    left: -38px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg-card);
+    box-shadow: 0 0 0 2px var(--accent);
+}
+.timeline-date { font-weight: 700; font-size: 0.9rem; color: var(--text-muted); }
+.timeline-content { margin-top: 5px; background: var(--bg-card); padding: 10px 15px; border-radius: var(--radius); border: 1px solid var(--border-color); }

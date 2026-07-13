@@ -1,0 +1,126 @@
+.card {
+    background: var(--bg-card);
+    border-radius: 8px; /* var(--radius); */
+    padding: 10px 15px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.card-title { font-size: 1.05rem; margin: 5px 0; font-weight: 600; }
+.card-time { font-size: 1.3rem; font-weight: 700; margin: 15px 0; color: var(--accent); }
+.card-meta { font-size: 0.85rem; color: var(--text-muted); }
+.card-notes { font-size: 0.85rem; margin-bottom: 4px; color: var(--text-muted); }
+.tags-container { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+.tag-chip {
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.05);
+    font-weight: 500;
+}
+.favorite-star { cursor: pointer; color: #ccc; font-size: 1.2rem; }
+.favorite-star.active { color: #ffcc00; }
+
+
+/* ==========================================================================
+   VISTA COMPACTA: FILA ESTRUCTURADA (DISEÑO CORREGIDO SIN SOLAPAMIENTO)
+   ========================================================================== */
+
+/* Solo aplicamos este diseño a las tarjetas de eventos dentro de los acordeones */
+.compact-mode .accordion-content .card {
+    display: grid;
+    /* Definimos 3 columnas:
+       Col 1: Se ajusta automáticamente al ancho de la fecha (auto)
+       Col 2: Se expande para ocupar el resto de la fila (1fr)
+       Col 3: Se ajusta al tamaño de la estrella (auto)
+    */
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+        "titulo-contenedor titulo-contenedor estrella"
+        "fecha             tiempo            ."
+        "notas             notas             ."
+        "tags              tags              tags";
+    padding: 12px 18px;
+    border-radius: 6px;
+    /* Usamos gap vertical, pero manejamos el espaciado horizontal manualmente */
+    gap: 4px 0; 
+    align-items: center;
+}
+
+/* 1. Línea Superior: Título a la izquierda, Estrella a la derecha */
+.compact-mode .accordion-content .card-header {
+    grid-area: titulo-contenedor;
+    margin-bottom: 0;
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+.compact-mode .accordion-content .card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+/* Estrella al extremo derecho del todo */
+.compact-mode .accordion-content .favorite-star {
+    grid-area: estrella;
+    font-size: 1.25rem;
+    justify-self: end;
+    align-self: center;
+}
+
+/* 2. Segunda Línea: "Fecha ➔ Tiempos" (Ubicados en celdas distintas de la misma fila) */
+.compact-mode .accordion-content .card-meta {
+    grid-area: fecha;          /* Se queda en la primera columna */
+    font-size: 0.95rem; 
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;       /* Evita que la fecha se rompa en dos líneas */
+    display: flex;
+    align-items: center;
+}
+
+/* Añadimos la flecha justo después de la fecha */
+.compact-mode .accordion-content .card-meta::after {
+    content: "➔";
+    color: var(--text-muted);
+    font-weight: normal;
+    margin: 0 10px;            /* Espacio perfecto a los lados de la flecha */
+}
+
+.compact-mode .accordion-content .card-time {
+    grid-area: tiempo;         /* Se coloca en la segunda columna, al lado de la flecha */
+    font-size: 0.9rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0;
+    justify-self: start;       /* Alineado al inicio, pegado a la flecha */
+}
+
+/* 3. Tercera Línea: Descripción / Notas */
+.compact-mode .accordion-content .card-notes {
+    grid-area: notas;
+    font-size: 0.8rem;
+    margin: 4px 0 0 0;
+    color: var(--text-muted);
+}
+
+/* 4. Cuarta Línea: Etiquetas (Tags) alineadas abajo a la derecha */
+.compact-mode .accordion-content .tags-container {
+    grid-area: tags;
+    margin-top: 6px;
+    justify-content: flex-end; 
+    display: flex;
+    gap: 4px;
+}
+
+.compact-mode .accordion-content .tag-chip {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+}

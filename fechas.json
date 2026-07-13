@@ -1,0 +1,127 @@
+{
+  "grupos": [
+    {
+      "nombre": "Apple",
+      "icono": "📱",
+      "color": "#007AFF",
+      "eventos": [
+        {
+          "tipo": "desde",
+          "titulo": "Iphone 4S",
+          "fecha": "2013-09-20",
+          "favorito": false,
+          "tags": ["Apple", "Móvil"],
+          "notas": "Primer iPhone"
+        },
+        {
+          "tipo": "desde",
+          "titulo": "Iphone 6S",
+          "fecha": "2016-03-09",
+          "favorito": false,
+          "tags": ["Apple", "Móvil"],
+          "notas": ""
+        },
+        {
+          "tipo": "desde",
+          "titulo": "Iphone 11 Pro Max",
+          "fecha": "2020-01-05",
+          "favorito": false,
+          "tags": ["Apple", "Móvil"],
+          "notas": ""
+        },
+        {
+          "tipo": "desde",
+          "titulo": "Iphone 17 Pro Max",
+          "fecha": "2025-11-27",
+          "favorito": false,
+          "tags": ["Historia", "Mac"],
+          "notas": ""
+        }
+      ]
+    },
+    {
+      "nombre": "Personal y Hogar",
+      "icono": "🏠",
+      "color": "#34C759",
+      "eventos": [
+        {
+          "tipo": "desde",
+          "titulo": "Compra coche C3 [5000€]",
+          "fecha": "2020-07-24",
+          "tags": ["Hogar", "Reforma"],
+          "notas": "Cambio de azulejos y encimera."
+        },
+        {
+          "tipo": "aniversario",
+          "titulo": "Cumpleaños",
+          "fecha": "1988-10-31",
+          "favorito": true,
+          "tags": ["Familia", "Cumpleaños"],
+          "notas": "Más añitos"
+        },
+        {
+          "tipo": "hasta",
+          "titulo": "Vencimiento Seguro Coche",
+          "fecha": "2026-12-15",
+          "favorito": true,
+          "tags": ["Gastos", "Coche"],
+          "notas": "Revisar otras compañías antes."
+        }
+      ]
+    },    
+    {
+      "nombre": "Dentista",
+      "icono": "🦷",
+      "color": "#b81414",
+      "eventos": [
+        {
+          "tipo": "periodo",
+          "titulo": "Instalación disyuntor",
+          "inicio": "2025-01-15",
+          "fin": "2025-03-15",
+          "tags": ["Gastos", "Dentista"],
+          "notas": "Cambio de azulejos y encimera."
+        },
+        {
+          "tipo": "hasta",
+          "titulo": "Brackets abajo",
+          "fecha": "2025-02-12",
+          "favorito": false,
+          "tags": ["Gastos", "Dentista"],
+          "notas": "Revisar otras compañías antes."
+        },
+        {
+          "tipo": "hasta",
+          "titulo": "Brackets arriba",
+          "fecha": "2025-03-12",
+          "favorito": false,
+          "tags": ["Gastos", "Dentista"],
+          "notas": "Revisar otras compañías antes."
+        },
+        {
+          "tipo": "hasta",
+          "titulo": "Fin brackets",
+          "fecha": "2026-12-15",
+          "favorito": false,
+          "tags": ["Gastos", "Dentista"],
+          "notas": "Revisar otras compañías antes."
+        }
+      ]
+    },
+    {
+      "nombre": "General",
+      "icono": "📌",
+      "color": "#8E8E93",
+      "eventos": [
+        {
+          "tipo": "desde",
+          "titulo": "Mi evento suelto",
+          "fecha": "2025-06-01",
+          "favorito": false,
+          "tags": ["Otros"],
+          "notas": "Este evento no tiene un grupo específico."
+        }
+      ]
+    }
+  ]
+}
