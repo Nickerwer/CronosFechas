@@ -25,7 +25,7 @@ export function calcularEstadisticas(grupos, eventos) {
     proximos.slice(0, 5).forEach(e => {
         const el = document.createElement('div');
         el.style.padding = '5px 0';
-        el.innerHTML = `• <strong>${e.titulo}</strong>: faltan ${e.diasAbsolutos} días`;
+        el.innerHTML = `• <strong>${e.titulo}</strong>: faltan ${e.diasAbsolutos} días (${e.tiempoFaltante})`;
         anivContainer.appendChild(el);
     });
 }

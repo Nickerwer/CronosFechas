@@ -33,6 +33,25 @@ async function arrancarApp() {
             renderizarTimeline(filtrados);
         });
     }
+
+    const formatBtn = document.getElementById('formatToggle');
+    if (formatBtn) {
+        // Definimos el icono inicial según lo guardado
+        const actualFormat = Storage.get('timeFormat', 'corto');
+        formatBtn.innerText = actualFormat === 'largo' ? '💬' : '⏱️';
+
+        formatBtn.addEventListener('click', () => {
+            const nuevoFormat = Storage.get('timeFormat', 'corto') === 'corto' ? 'largo' : 'corto';
+            Storage.set('timeFormat', nuevoFormat);
+            
+            // Cambiamos el icono del botón para dar feedback visual
+            formatBtn.innerText = nuevoFormat === 'largo' ? '💬' : '⏱️';
+            formatBtn.title = nuevoFormat === 'largo' ? "Cambiar a formato Corto" : "Cambiar a formato Largo";
+
+            // Forzamos a la app a volver a calcular los textos y pintar la pantalla
+            actualizarFlujoMuestreo();
+        });
+    }
     
     // Recuperar últimos estados persistidos en LocalStorage
     document.getElementById('searchInput').value = Storage.get('lastSearch', '');
@@ -100,18 +119,43 @@ function inicializarVistaCompacta() {
     const btn = document.getElementById('viewToggle');
     if (!btn) return;
 
-    // Leer el estado guardado del localStorage
-    const isCompact = Storage.get('compactMode', false);
-    if (isCompact) {
-        document.body.classList.add('compact-mode');
-        btn.innerText = '📱'; // Cambia el icono para indicar que está en modo lista
-    }
+    // Estados posibles: 'normal' (tarjetas), 'compact' (lista grid), 'simple' (texto corrido)
+    let currentMode = Storage.get('viewMode', 'normal');
+
+    // Aplicar el modo guardado al arrancar
+    aplicarModoVista(currentMode, btn);
 
     btn.addEventListener('click', () => {
-        const active = document.body.classList.toggle('compact-mode');
-        Storage.set('compactMode', active);
-        btn.innerText = active ? '📱' : '📋'; // Alterna icono entre Lista y Tarjetas
+        // Ciclo de cambio: Normal -> Compacto -> Súper Simple -> Normal
+        if (currentMode === 'normal') {
+            currentMode = 'compact';
+        } else if (currentMode === 'compact') {
+            currentMode = 'simple';
+        } else {
+            currentMode = 'normal';
+        }
+
+        Storage.set('viewMode', currentMode);
+        aplicarModoVista(currentMode, btn);
     });
+}
+
+function aplicarModoVista(modo, boton) {
+    // Limpiamos clases previas del body
+    document.body.classList.remove('compact-mode', 'super-simple-mode');
+
+    if (modo === 'compact') {
+        document.body.classList.add('compact-mode');
+        boton.innerText = '📱'; // Icono para vista compacta
+        boton.title = "Cambiar a vista Texto Simple";
+    } else if (modo === 'simple') {
+        document.body.classList.add('super-simple-mode');
+        boton.innerText = '📝'; // Icono para vista de texto plano
+        boton.title = "Cambiar a vista Tarjetas Normal";
+    } else {
+        boton.innerText = '📋'; // Icono para vista normal
+        boton.title = "Cambiar a vista Lista Compacta";
+    }
 }
 
 document.addEventListener('DOMContentLoaded', arrancarApp);

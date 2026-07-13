@@ -46,10 +46,10 @@
       "eventos": [
         {
           "tipo": "desde",
-          "titulo": "Compra coche C3 [5000€]",
+          "titulo": "Compra coche C3",
           "fecha": "2020-07-24",
-          "tags": ["Hogar", "Reforma"],
-          "notas": "Cambio de azulejos y encimera."
+          "tags": ["Gastos", "Coche"],
+          "notas": "Precio: 5000€"
         },
         {
           "tipo": "aniversario",
@@ -63,7 +63,7 @@
           "tipo": "hasta",
           "titulo": "Vencimiento Seguro Coche",
           "fecha": "2026-12-15",
-          "favorito": true,
+          "favorito": false,
           "tags": ["Gastos", "Coche"],
           "notas": "Revisar otras compañías antes."
         }
@@ -78,7 +78,7 @@
           "tipo": "periodo",
           "titulo": "Instalación disyuntor",
           "inicio": "2025-01-15",
-          "fin": "2025-03-15",
+          "fin": "2025-03-16",
           "tags": ["Gastos", "Dentista"],
           "notas": "Cambio de azulejos y encimera."
         },

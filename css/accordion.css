@@ -1,3 +1,6 @@
+#accordionContainer {
+    margin-top: 15px;
+}
 .accordion-item {
     background: var(--bg-card);
     border-radius: var(--radius);

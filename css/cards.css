@@ -1,3 +1,9 @@
+.panel-stats h3, .panel-aniversarios h3 {
+    text-decoration: underline;
+}
+.panel-stats .stats-grid {
+    margin-top: 5px;
+}
 .card {
     background: var(--bg-card);
     border-radius: 8px; /* var(--radius); */
@@ -77,8 +83,8 @@
 /* 2. Segunda Línea: "Fecha ➔ Tiempos" (Ubicados en celdas distintas de la misma fila) */
 .compact-mode .accordion-content .card-meta {
     grid-area: fecha;          /* Se queda en la primera columna */
-    font-size: 0.95rem; 
-    font-weight: 700;
+    font-size: 0.90rem; 
+    font-weight: 600;
     color: var(--text-main);
     white-space: nowrap;       /* Evita que la fecha se rompa en dos líneas */
     display: flex;
@@ -95,9 +101,9 @@
 
 .compact-mode .accordion-content .card-time {
     grid-area: tiempo;         /* Se coloca en la segunda columna, al lado de la flecha */
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--accent);
-    font-weight: 600;
+    font-weight: 700;
     margin: 0;
     justify-self: start;       /* Alineado al inicio, pegado a la flecha */
 }
@@ -123,4 +129,62 @@
     font-size: 0.7rem;
     padding: 2px 6px;
     border-radius: 4px;
+}
+
+/* ==========================================================================
+   VISTA SÚPER SIMPLE: TEXTO PLANO SEGUIDO (Modo Notas)
+   ========================================================================== */
+.super-simple-mode .accordion-content {
+    display: block !important; /* Desactiva el grid/flex de los contenedores */
+    padding: 10px 15px;
+    background: transparent;
+}
+
+.super-simple-mode .accordion-content .card {
+    display: block !important;    /* La tarjeta se comporta como un párrafo normal */
+    background: none !important;  /* Sin fondo de tarjeta */
+    border: none !important;      /* Sin bordes */
+    box-shadow: none !important;  /* Sin sombras */
+    padding: 3px 0 !important;    /* Espaciado mínimo entre líneas */
+    margin: 0 !important;
+    border-radius: 0 !important;
+    transform: none !important;   /* Evita efectos de elevación al pasar el cursor */
+}
+
+/* Forzamos a que todo el contenido se vuelva texto corrido (inline) */
+.super-simple-mode .accordion-content .card-header,
+.super-simple-mode .accordion-content .card-title,
+.super-simple-mode .accordion-content .card-meta,
+.super-simple-mode .accordion-content .card-time {
+    display: inline !important; 
+    font-size: 0.95rem !important;
+    font-weight: normal !important;
+    color: var(--text-main) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* El título en negrita para diferenciarlo */
+.super-simple-mode .accordion-content .card-title {
+    font-weight: 600 !important;
+}
+
+/* Añadimos los dos puntos ":" después del título */
+.super-simple-mode .accordion-content .card-title::after {
+    content: ": ";
+    font-weight: normal;
+}
+
+/* El tiempo destacado sutilmente en el color de acento */
+.super-simple-mode .accordion-content .card-time {
+    color: var(--accent) !important;
+    font-weight: 500 !important;
+}
+
+/* Ocultamos elementos innecesarios en esta vista para mantener la pureza del texto */
+.super-simple-mode .accordion-content .card-meta,       /* Oculta la fecha (solo muestra el tiempo calculado) */
+.super-simple-mode .accordion-content .favorite-star,    /* Oculta la estrella */
+.super-simple-mode .accordion-content .card-notes,       /* Oculta las notas de descripción */
+.super-simple-mode .accordion-content .tags-container {  /* Oculta las etiquetas */
+    display: none !important;
 }

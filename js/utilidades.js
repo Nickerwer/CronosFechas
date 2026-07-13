@@ -28,12 +28,27 @@ export function calcularDiferencia(fechaInicio, fechaFin = new Date()) {
 
 export function obtenerProximoAniversario(fecha) {
     const hoy = new Date();
-    const f = new Date(fecha);
-    let prox = new Date(hoy.getFullYear(), f.getMonth(), f.getDate());
-    if (prox < hoy) prox.setFullYear(hoy.getFullYear() + 1);
+    hoy.setHours(0, 0, 0, 0); // Normalizamos hoy a las 00:00:00
     
-    const diffTime = prox - hoy;
+    const f = new Date(fecha);
+    
+    // Calculamos el aniversario para el año actual a las 00:00:00
+    let prox = new Date(hoy.getFullYear(), f.getMonth(), f.getDate(), 0, 0, 0, 0);
+    
+    // Si el aniversario de este año ya pasó (o es antes de hoy), pasa al año siguiente
+    if (prox < hoy) {
+        prox.setFullYear(hoy.getFullYear() + 1);
+    }
+    
+    // Diferencia matemática limpia en días
+    const diffTime = prox.getTime() - hoy.getTime();
     const diasFaltantes = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     const edad = prox.getFullYear() - f.getFullYear();
-    return { fecha: prox, diasFaltantes, edad };
+    
+    // Retornamos 'fechaExacta' de forma explícita para que coincida con el importador
+    return { 
+        fechaExacta: prox, 
+        diasFaltantes, 
+        edad 
+    };
 }
