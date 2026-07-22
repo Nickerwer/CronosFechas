@@ -74,7 +74,7 @@
           "fecha": "2025-11-20",
           "favorito": false,
           "tags": ["Compras"],
-          "notas": "Primer iPhone"
+          "notas": ""
         },
         {
           "tipo": "desde",
@@ -82,8 +82,9 @@
           "fecha": "2026-03-19",
           "favorito": false,
           "tags": ["Compras", "Consola"],
-          "notas": "Primer iPhone"
-        }
+          "notas": "Aliexpress"
+         }
+      ]
     },
     {
       "nombre": "Personal y Hogar",
