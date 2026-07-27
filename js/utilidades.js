@@ -52,3 +52,32 @@ export function obtenerProximoAniversario(fecha) {
         edad 
     };
 }
+
+// Función para formatear el tiempo según la preferencia guardada
+export function formatearTiempoDinamico(years, months, weeks, days, tipo = 'desde') {
+    const formatoLargo = Storage.get('timeFormat', 'corto') === 'largo';
+
+    if (!formatoLargo) {
+        // Formato Corto original (ej: 12a 9m 3s 2d)
+        let partes = [];
+        if (years > 0) partes.push(`${years}a`);
+        if (months > 0) partes.push(`${months}m`);
+        if (weeks > 0) partes.push(`${weeks}s`);
+        if (days > 0 || partes.length === 0) partes.push(`${days}d`);
+        return partes.join(' ');
+    } else {
+        // Formato Largo solicitado (ej: 12 años, 9 meses, 3 semanas y 2 días)
+        let partes = [];
+        if (years > 0) partes.push(years === 1 ? '1 año' : `${years} años`);
+        if (months > 0) partes.push(months === 1 ? '1 mes' : `${months} meses`);
+        if (weeks > 0) partes.push(weeks === 1 ? '1 semana' : `${weeks} semanas`);
+        if (days > 0 || partes.length === 0) partes.push(days === 1 ? '1 día' : `${days} días`);
+
+        if (partes.length === 0) return 'hoy';
+        if (partes.length === 1) return partes[0];
+        
+        // Unir de forma natural con comas y una "y" al final
+        const ultimo = partes.pop();
+        return `${partes.join(', ')} y ${ultimo}`;
+    }
+}

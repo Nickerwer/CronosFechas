@@ -1,13 +1,38 @@
 // Renderizador Dinámico de Tarjetas y Acordeones
 import { Storage } from './storage.js';
+import { supabase } from './supabaseClient.js';
 
-export function renderizarUI(grupos, eventosFiltrados) {
+export function renderizarUI(datos, eventosFiltrados) {
     const container = document.getElementById('accordionContainer');
     container.innerHTML = '';
     const abiertos = Storage.get('gruposAbiertos', {});
 
-    grupos.forEach((grupo, idx) => {
-        const evGrupo = eventosFiltrados.filter(e => e.grupoNombre === grupo.nombre);
+    // 1. Detección inteligente de grupos (Soporta JSON antiguo y Supabase)
+    let listaGrupos = [];
+    if (Array.isArray(datos) && datos.length > 0 && !datos[0].eventos) {
+        // Datos de Supabase: Extraemos grupos únicos agrupando la lista plana
+        const mapaGrupos = new Map();
+        datos.forEach(e => {
+            if (!mapaGrupos.has(e.grupo)) {
+                mapaGrupos.set(e.grupo, {
+                    nombre: e.grupo,
+                    color: e.color || '#4f46e5',
+                    icono: e.icono || '📁'
+                });
+            }
+        });
+        listaGrupos = Array.from(mapaGrupos.values());
+    } else if (datos.grupos) {
+        // Formato JSON tradicional
+        listaGrupos = datos.grupos;
+    } else if (Array.isArray(datos)) {
+        listaGrupos = datos;
+    }
+
+    // 2. Renderizado de Acordeones
+    listaGrupos.forEach((grupo) => {
+        // Filtrar eventos pertenecientes a este grupo (evalúa e.grupo o e.grupoNombre)
+        const evGrupo = eventosFiltrados.filter(e => (e.grupo || e.grupoNombre) === grupo.nombre);
         if (evGrupo.length === 0) return; // Ocultar si la búsqueda vacía el grupo
 
         const item = document.createElement('div');
@@ -50,12 +75,32 @@ export function renderizarUI(grupos, eventosFiltrados) {
                     ${(e.tags || []).map(t => `<span class="tag-chip">${t}</span>`).join('')}
                 </div>
             `;
-            // Listener interactivo mutar favorito reactivamente local
-            card.querySelector('.favorite-star').addEventListener('click', (ev) => {
+
+            // Listener interactivo para mutar favorito en Supabase y localmente
+            card.querySelector('.favorite-star').addEventListener('click', async (ev) => {
                 ev.stopPropagation();
-                e.favorito = !e.favorito;
+                
+                const nuevoEstadoFavorito = !e.favorito;
+                e.favorito = nuevoEstadoFavorito; // Actualización visual rápida (UI optimista)
+
+                // Si el evento tiene ID (proviene de Supabase), actualizamos en la nube
+                if (e.id) {
+                    try {
+                        const { error } = await supabase
+                            .from('eventos')
+                            .update({ favorito: nuevoEstadoFavorito })
+                            .eq('id', e.id);
+
+                        if (error) console.error('Error guardando favorito en Supabase:', error);
+                    } catch (err) {
+                        console.error('Error de conexión con Supabase:', err);
+                    }
+                }
+
+                // Disparar evento para actualizar el resto de la interfaz (estadísticas, etc.)[cite: 4]
                 document.dispatchEvent(new CustomEvent('datosModificados'));
             });
+
             content.appendChild(card);
         });
 

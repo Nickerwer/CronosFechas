@@ -1,5 +1,6 @@
 // Orquestador Core del Ciclo de Vida de la App
 import { inicializarTema } from './tema.js';
+import { supabase } from './supabaseClient.js';
 import { procesarDatos } from './fechas.js';
 import { renderizarUI } from './render.js';
 import { filtrarYOrdenar } from './buscador.js';
@@ -21,7 +22,7 @@ async function arrancarApp() {
     if (timelineSortSelect) {
         timelineSortSelect.value = Storage.get('timelineSort', 'reciente');
         
-        // 2. Escuchar cambios específicos del timeline sin afectar el resto de la app
+        // Escuchar cambios específicos del timeline sin afectar el resto de la app
         timelineSortSelect.addEventListener('change', (e) => {
             Storage.set('timelineSort', e.target.value);
             
@@ -57,12 +58,29 @@ async function arrancarApp() {
     document.getElementById('searchInput').value = Storage.get('lastSearch', '');
     document.getElementById('sortSelect').value = Storage.get('lastSort', 'reciente');
 
+    // =========================================================================
+    // CARGA DESDE SUPABASE (con fallback a 'fechas.json' si no hay red)
+    // =========================================================================
     try {
-        const res = await fetch('fechas.json');
-        DATA_GLOBAL = await res.json();
+        const { data: eventosSupabase, error } = await supabase
+            .from('eventos')
+            .select('*');
+
+        if (error) throw error;
+
+        // Si Supabase devuelve datos, asignamos la lista directa
+        DATA_GLOBAL = eventosSupabase;
         actualizarFlujoMuestreo();
+
     } catch (e) {
-        console.error("Carga local fallida, esperando importación manual.");
+        console.warn("Fallo al conectar con Supabase. Intentando carga local de fallback:", e);
+        try {
+            const res = await fetch('fechas.json');
+            DATA_GLOBAL = await res.json();
+            actualizarFlujoMuestreo();
+        } catch (errLocal) {
+            console.error("Carga local y remota fallidas, esperando importación manual.");
+        }
     }
 
     // Registro de Listeners de Eventos de Controles
@@ -92,15 +110,22 @@ async function arrancarApp() {
 }
 
 function actualizarFlujoMuestreo() {
-    EVENTOS_FLAT = procesarDatos(DATA_GLOBAL.grupos);
+    // Si DATA_GLOBAL tiene .grupos es la estructura JSON tradicional, 
+    // si no, es el arreglo plano que nos da Supabase
+    const datosAProcesar = DATA_GLOBAL.grupos ? DATA_GLOBAL.grupos : DATA_GLOBAL;
+    EVENTOS_FLAT = procesarDatos(datosAProcesar);
+
     const q = document.getElementById('searchInput').value;
     const c = document.getElementById('sortSelect').value;
     
     const filtrados = filtrarYOrdenar(EVENTOS_FLAT, q, c);
     
-    renderizarUI(DATA_GLOBAL.grupos, filtrados);
+    // Si tenemos grupos estructurados los enviamos, si no, enviamos el arreglo plano
+    const gruposOData = DATA_GLOBAL.grupos ? DATA_GLOBAL.grupos : DATA_GLOBAL;
+    
+    renderizarUI(gruposOData, filtrados);
     renderizarTimeline(filtrados);
-    calcularEstadisticas(DATA_GLOBAL.grupos, filtrados);
+    calcularEstadisticas(gruposOData, filtrados);
 
     inicializarCalendario(filtrados);
 }
