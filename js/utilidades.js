@@ -1,3 +1,5 @@
+import { Storage } from './storage.js';
+
 // Operaciones de cálculo de fechas de alta precisión
 export function calcularDiferencia(fechaInicio, fechaFin = new Date()) {
     let start = new Date(fechaInicio);
