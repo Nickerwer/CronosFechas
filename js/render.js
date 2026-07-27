@@ -7,10 +7,9 @@ export function renderizarUI(datos, eventosFiltrados) {
     container.innerHTML = '';
     const abiertos = Storage.get('gruposAbiertos', {});
 
-    // 1. Detección inteligente de grupos (Soporta JSON antiguo y Supabase)
+    // Detección inteligente de grupos (Soporta JSON antiguo y Supabase)
     let listaGrupos = [];
     if (Array.isArray(datos) && datos.length > 0 && !datos[0].eventos) {
-        // Datos de Supabase: Extraemos grupos únicos agrupando la lista plana
         const mapaGrupos = new Map();
         datos.forEach(e => {
             if (!mapaGrupos.has(e.grupo)) {
@@ -23,17 +22,15 @@ export function renderizarUI(datos, eventosFiltrados) {
         });
         listaGrupos = Array.from(mapaGrupos.values());
     } else if (datos.grupos) {
-        // Formato JSON tradicional
         listaGrupos = datos.grupos;
     } else if (Array.isArray(datos)) {
         listaGrupos = datos;
     }
 
-    // 2. Renderizado de Acordeones
+    // Renderizado de Acordeones y Tarjetas
     listaGrupos.forEach((grupo) => {
-        // Filtrar eventos pertenecientes a este grupo (evalúa e.grupo o e.grupoNombre)
         const evGrupo = eventosFiltrados.filter(e => (e.grupo || e.grupoNombre) === grupo.nombre);
-        if (evGrupo.length === 0) return; // Ocultar si la búsqueda vacía el grupo
+        if (evGrupo.length === 0) return;
 
         const item = document.createElement('div');
         item.className = `accordion-item ${abiertos[grupo.nombre] ? 'open' : ''}`;
@@ -63,12 +60,15 @@ export function renderizarUI(datos, eventosFiltrados) {
         evGrupo.forEach(e => {
             const card = document.createElement('div');
             card.className = 'card';
+
+            const esFav = Boolean(e.favorito);
+
             card.innerHTML = `
                 <div class="card-header">
+                    <span class="favorite-star ${esFav ? 'active' : ''}">★</span>
                     <span class="card-title">${e.titulo}</span>
-                    <span class="favorite-star ${e.favorito ? 'active' : ''}">★</span>
                 </div>
-                <div class="card-meta">${e.fecha || (e.inicio + ' al ' + e.fin)}</div>
+                <div class="card-meta">${e.fechaTexto || e.fecha || (e.inicio + ' al ' + e.fin)}</div>
                 <div class="card-time">${e.textoTiempo}</div>
                 ${e.notas ? `<p class="card-notes">${e.notas}</p>` : ''}
                 <div class="tags-container">
@@ -76,30 +76,31 @@ export function renderizarUI(datos, eventosFiltrados) {
                 </div>
             `;
 
-            // Listener interactivo para mutar favorito en Supabase y localmente
-            card.querySelector('.favorite-star').addEventListener('click', async (ev) => {
+            const starEl = card.querySelector('.favorite-star');
+
+            starEl.onclick = async (ev) => {
                 ev.stopPropagation();
-                
-                const nuevoEstadoFavorito = !e.favorito;
-                e.favorito = nuevoEstadoFavorito; // Actualización visual rápida (UI optimista)
 
-                // Si el evento tiene ID (proviene de Supabase), actualizamos en la nube
+                e.favorito = !e.favorito;
+                starEl.classList.toggle('active', e.favorito);
+
                 if (e.id) {
-                    try {
-                        const { error } = await supabase
-                            .from('eventos')
-                            .update({ favorito: nuevoEstadoFavorito })
-                            .eq('id', e.id);
+                    const { error } = await supabase
+                        .from('eventos')
+                        .update({ favorito: e.favorito })
+                        .eq('id', e.id);
 
-                        if (error) console.error('Error guardando favorito en Supabase:', error);
-                    } catch (err) {
-                        console.error('Error de conexión con Supabase:', err);
+                    if (error) {
+                        console.error('Error al guardar en Supabase:', error);
+                        // Si la red falla, revertimos únicamente esta estrella
+                        e.favorito = !e.favorito;
+                        starEl.classList.toggle('active', e.favorito);
                     }
                 }
-
-                // Disparar evento para actualizar el resto de la interfaz (estadísticas, etc.)[cite: 4]
-                document.dispatchEvent(new CustomEvent('datosModificados'));
-            });
+                
+                // ¡IMPORTANTE! NO disparamos 'datosModificados' ni 'renderizarUI' aquí.
+                // Así el acordeón NO se destruye ni se vuelve a construir.
+            };
 
             content.appendChild(card);
         });

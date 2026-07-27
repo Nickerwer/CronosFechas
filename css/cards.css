@@ -135,9 +135,13 @@
    VISTA SÚPER SIMPLE: TEXTO PLANO SEGUIDO (Modo Notas)
    ========================================================================== */
 .super-simple-mode .accordion-content {
-    display: block !important; /* Desactiva el grid/flex de los contenedores */
-    padding: 10px 15px;
-    background: transparent;
+    display: none;
+    padding: 8px 12px;
+}
+
+/* 2. SOLO cuando el acordeón está desplegado (.open), mostramos el contenido */
+.super-simple-mode .accordion-item.open .accordion-content {
+    display: block;
 }
 
 .super-simple-mode .accordion-content .card {
@@ -183,8 +187,14 @@
 
 /* Ocultamos elementos innecesarios en esta vista para mantener la pureza del texto */
 .super-simple-mode .accordion-content .card-meta,       /* Oculta la fecha (solo muestra el tiempo calculado) */
-.super-simple-mode .accordion-content .favorite-star,    /* Oculta la estrella */
 .super-simple-mode .accordion-content .card-notes,       /* Oculta las notas de descripción */
 .super-simple-mode .accordion-content .tags-container {  /* Oculta las etiquetas */
     display: none !important;
+}
+
+.super-simple-mode .favorite-star.active {
+    display: inline-block !important;
+    color: #f59e0b; /* Color dorado */
+    text-shadow: 0 0 5px rgba(245, 158, 11, 0.4);
+    font-size: 1.1em;
 }

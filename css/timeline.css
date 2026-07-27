@@ -21,3 +21,15 @@
 }
 .timeline-date { font-weight: 700; font-size: 0.9rem; color: var(--text-muted); }
 .timeline-content { margin-top: 5px; background: var(--bg-card); padding: 10px 15px; border-radius: var(--radius); border: 1px solid var(--border-color); }
+
+/* Estilo especial para destacar el nodo 'Hoy' en la línea de tiempo */
+.timeline-item-hoy .timeline-content {
+    background-color: rgba(239, 68, 68, 0.1); /* Fondo ligeramente rojizo */
+    border: 2px dashed #ef4444; /* Borde punteado/destacado */
+    font-weight: bold;
+}
+
+.timeline-item-hoy .timeline-dot {
+    box-shadow: 0 0 10px #ef4444; /* Efecto de resplandor en el punto */
+    transform: scale(1.2); /* Punto un poco más grande */
+}
